@@ -1,0 +1,36 @@
+# 示例代码，供您试用aiXcoder
+#
+# 请您将感受、建议通过「反馈建议」反馈
+# 需帮助请搜索公众号aiXcoder，并联系客服
+
+import numpy as np
+import tensorflow as tf
+
+# Model parameters
+W = tf.Variable([.3], dtype=tf.float32)
+b = tf.Variable([-.3], dtype=tf.float32)
+# Model input and output
+x = tf.placeholder(tf.float32)
+
+linear_model = W * x + b
+y = tf.placeholder(tf.float32)
+# loss
+loss = tf.reduce_sum(tf.square(linear_model - y)) # sum of the squares
+
+# optimizer,定义一个优化器，使用梯度下降优化方法
+optimizer = tf.train.GradientDescentOptimizer(0.01)
+#优化器最小化loss
+train = optimizer.minimize(loss)
+
+x_train = [1,2,3,4]
+y_train = [0,-1,-2,-3]
+
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init) # reset values to wrong
+
+for i in range(1000):
+  sess.run(train, feed_dict = {x:x_train, y:y_train})
+
+curr_W, curr_b, curr_loss = sess.run([W, b, loss], {x:x_train, y:y_train})
+print("W: %s b: %s loss: %s"%(curr_W, curr_b, curr_loss))

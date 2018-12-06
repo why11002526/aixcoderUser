@@ -1,0 +1,54 @@
+/*
+* 示例代码，供您试用aiXcoder
+*
+* 请您将感受、建议通过「反馈建议」反馈
+* 需帮助请搜索公众号aiXcoder，并联系客服
+*/
+
+
+
+package com.guan.common.model;
+
+import com.guan.common.MyConfig;
+
+import com.jfinal.log.Log;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.kit.PathKit;
+import com.jfinal.kit.PropKit;
+import com.jfinal.plugin.activerecord.generator.Generator;
+import com.jfinal.plugin.druid.DruidPlugin;
+
+import javax.sql.DataSource;
+
+public class _JFinalGenerator {
+    public static DataSource getDataSource() {
+        PropKit.use("config.properties");
+        DruidPlugin druidPlugin = MyConfig.createDruidPlugin();
+        druidPlugin.start();
+        return druidPlugin.getDataSource();
+    }
+
+    public static void main(String[] args) {
+        /*baseModel所使用的包名*/
+        String baseModelPackageName = "com.guan.common.model.base";
+
+        /*baseModel文件保存路径*/
+        String baseModelOutPutDir = PathKit.getWebRootPath() + "/../src/com/guan/common/model/base";
+        String modelPackageName = "com.guan.common.model";
+        String modelOutputDir = baseModelOutPutDir + "/..";
+
+        /*创建生成器*/
+        Generator generator = new Generator(getDataSource(),
+                baseModelPackageName,
+                baseModelOutPutDir,
+                modelPackageName,
+                modelOutputDir);
+        generator.setGenerateChainSetter(false);
+        generator.addExcludedTable("adv");
+        generator.setGenerateDaoInModel(true);
+        generator.setGenerateChainSetter(true);
+        generator.setGenerateDataDictionary(false);
+        generator.setRemovedTableNamePrefixes("t_");
+        generator.generate();
+    }
+}
